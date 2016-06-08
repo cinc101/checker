@@ -4,6 +4,7 @@
 'use strict';
 
 const myUtil = require('./myUtil');
+const mydb = require('./database');
 
 const attrType = ["src", "data-original", "data-lazy-img"];
 
@@ -36,7 +37,11 @@ function findImg(rt) {
             let selectorStr = "";
             let allSelector = myUtil.getLocation(selectorStr, childList[i]);
 
-            console.log(allSelector + "============" + imgUrl);
+            mydb.save({
+                "name": "333",
+                "count": 1
+            });
+            // console.log(allSelector + "============" + imgUrl);
         } else {
             findImg(childList[i]);
         }

@@ -1,6 +1,7 @@
 /**
  * Created by cdchenjia on 2016/6/8.
  */
+'use strict';
 const mongodb = require('mongodb');
 const server = new mongodb.Server('localhost', 27017, {auto_reconnect: true});
 const db = new mongodb.Db('checker', server, {safe: true});
@@ -70,23 +71,25 @@ let mydb = function () {
 
 
 /**
- * data: {
+ * 新增
+ * @param data
+ * * data: {
  *     "name": "body .class .class p img",
  *     "count": 1
  * }
- * @param data
  */
 mydb.prototype.save = function (data) {
     db.open(function (err, db) {
         if (!err) {
-            //新增数据
-            let data = {
-                "name": "",
-                "count": 1
-            };
-            collection.save(tmp1, {safe: true}, function (err, result) {
-                console.log(result);
-                db.close();
+            db.createCollection('mycoll', {safe: true}, function (err, collection) {
+                if(!err) {
+                    collection.save(data, {safe: true}, function (err, result) {
+                        console.log(result);
+                        db.close();
+                    });
+                } else {
+                    console.log(err);
+                }
             });
         } else {
             console.log(err);
@@ -94,10 +97,13 @@ mydb.prototype.save = function (data) {
     });
 };
 
+/**
+ * 更新
+ * @param data
+ */
 mydb.prototype.update = function (data) {
     db.open(function (err, db) {
         if (!err) {
-            //更新数据
             collection.update({name: data.name}, {$set: {count: data.count}}, {safe: true}, function (err, result) {
                 console.log(result);
                 db.close();
@@ -108,4 +114,22 @@ mydb.prototype.update = function (data) {
     });
 };
 
-module.exports = mydb;
+/**
+ * 取得name相同的记录数量
+ * @param data
+ */
+mydb.prototype.getCount = function (data) {
+    db.open(function (err, db) {
+        if (!err) {
+            collection.find().toArray(function(err, docs) {
+                console.log(docs);
+
+                db.close();
+            });
+        } else {
+            console.log(err);
+        }
+    });
+};
+
+module.exports = new mydb();
