@@ -1,0 +1,10 @@
+{
+  "name": "imageCheck",
+  "version": "0.0.0",
+  "author": "chenjia",
+  "devDependencies": {
+    "cheerio": "0.20.0",
+    "request": "2.72.0",
+    "mongodb": "2.1.21"
+  }
+}
