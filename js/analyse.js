@@ -5,6 +5,7 @@
 
 const myUtil = require('./myUtil');
 const mydb = require('./mydb');
+const Config = require('./Config');
 
 const attrType = ["src", "data-original", "data-lazy-img"];
 
@@ -13,7 +14,8 @@ let analyse = function () {
 
 analyse.prototype.doAnalyse = function ($) {
     let root = $("body");
-
+    Config.ticker = 0;
+    
     findImg(root);
 };
 
@@ -38,18 +40,21 @@ function findImg(rt) {
             let selectorStr = "";
             let allSelector = myUtil.getLocation(selectorStr, childList[i]);
 
+            Config.ticker += 1;
             mydb.save({
                 "name": allSelector,
                 "count": i
+            }, function() {
+                Config.ticker -= 1;
+                if(Config.ticker == 0) {
+                    mydb.close();
+                }
             });
-
             // console.log(allSelector + "============" + imgUrl);
         } else {
             findImg(childList[i]);
         }
     }
-
 }
-
 
 module.exports = new analyse();

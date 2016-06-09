@@ -17,17 +17,22 @@ let mongooseModel = db.model('mongoose', mongooseSchema);
 
 let mydb = function() {};
 
-mydb.prototype.save = function(doc) {
+mydb.prototype.save = function(doc, callback) {
     // 增加记录 基于model操作
     mongooseModel.create(doc, function(error){
         if(error) {
             console.log(error);
         } else {
-            console.log('save ok');
+            if(typeof callback === "function") {
+                callback();
+            }
         }
-        // 关闭数据库链接
-        // db.close();
     });
+};
+
+// 关闭数据库链接
+mydb.prototype.close = function() {
+    db.close();
 };
 
 module.exports = new mydb();

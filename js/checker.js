@@ -6,7 +6,7 @@ const myUtil = require('./myUtil');
 const analyse = require('./analyse');
 const cheerio = require('cheerio');
 
-myUtil.get('http://chaoshi.jd.com/', function(html, statusCode) {
+myUtil.get('http://www.jd.hk/', function(html, statusCode) {
     if (statusCode == 200) {
         let domObj = cheerio.load(html);
         analyse.doAnalyse(domObj);
