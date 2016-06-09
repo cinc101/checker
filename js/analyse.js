@@ -4,7 +4,7 @@
 'use strict';
 
 const myUtil = require('./myUtil');
-const mydb = require('./database');
+const mydb = require('./mydb');
 
 const attrType = ["src", "data-original", "data-lazy-img"];
 
@@ -13,6 +13,7 @@ let analyse = function () {
 
 analyse.prototype.doAnalyse = function ($) {
     let root = $("body");
+
     findImg(root);
 };
 
@@ -38,9 +39,10 @@ function findImg(rt) {
             let allSelector = myUtil.getLocation(selectorStr, childList[i]);
 
             mydb.save({
-                "name": "333",
-                "count": 1
+                "name": allSelector,
+                "count": i
             });
+
             // console.log(allSelector + "============" + imgUrl);
         } else {
             findImg(childList[i]);
