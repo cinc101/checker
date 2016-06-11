@@ -6,6 +6,8 @@
     "cheerio": "0.20.0",
     "request": "2.72.0",
     "mongodb": "2.1.18",
-	"mongoose": "4.4.20"
+	"mongoose": "4.4.20",
+    "co": "4.6.0",
+    "thunkify": "2.1.2"
   }
 }

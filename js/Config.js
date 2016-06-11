@@ -3,7 +3,9 @@
  */
 'use strict';
 var Config = {
-    "ticker": 0
+    "ticker": 0,
+    "lock": false,
+    "tmpNum": 0
 };
 
 module.exports = Config;
