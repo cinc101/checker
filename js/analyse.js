@@ -4,9 +4,8 @@
 'use strict';
 
 const myUtil = require('./myUtil');
-// const mydb = require('./mydb');
+const service = require('./service');
 const cacheOpt = require('./cacheopt');
-const Config = require('./Config');
 const LocalData = require('./localData');
 
 const attrType = ["src", "data-original", "data-lazy-img"];
@@ -14,15 +13,16 @@ const attrType = ["src", "data-original", "data-lazy-img"];
 let analyse = function () {
 };
 
-analyse.prototype.doAnalyse = function ($) {
+analyse.prototype.doAnalyse = function ($, url) {
     let root = $("body");
 
-    findImg(root);
-
-    console.log(LocalData.selectorData);
+    findImg(root, url);
+    
+    service.deleteByUrl(url);
+    service.save(LocalData.selectorData);
 };
 
-function findImg(rt) {
+function findImg(rt, url) {
     let root = rt;
     let childList;
 
@@ -48,12 +48,12 @@ function findImg(rt) {
                 if(isExisted) {
                     cacheOpt.update(position);
                 } else {
-                    cacheOpt.insert(wholeSelector);
+                    cacheOpt.insert(wholeSelector, url);
                 }
             });
         }
         else {
-            findImg(childList[i]);
+            findImg(childList[i], url);
         }
     }
 }

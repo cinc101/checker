@@ -7,9 +7,10 @@ const LocalData = require('./localData');
 let cacheOpt = function() {
 };
 
-cacheOpt.prototype.insert = function(keyword) {
+cacheOpt.prototype.insert = function(keyword, url) {
     let newObj = {
         "name": keyword,
+        "url": url,
         "count": 1
     };
     try {
