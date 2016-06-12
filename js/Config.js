@@ -4,8 +4,7 @@
 'use strict';
 var Config = {
     "ticker": 0,
-    "lock": false,
-    "tmpNum": 0
+    "lock": false
 };
 
 module.exports = Config;

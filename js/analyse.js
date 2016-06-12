@@ -5,31 +5,21 @@
 
 const myUtil = require('./myUtil');
 // const mydb = require('./mydb');
+const cacheOpt = require('./cacheopt');
 const Config = require('./Config');
+const LocalData = require('./localData');
 
 const attrType = ["src", "data-original", "data-lazy-img"];
-
-let mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/checker');
-
-let db = mongoose.connection;
-
-// Schema 结构
-let mongooseSchema = new mongoose.Schema({
-    name: {type: String},
-    count: {type: Number}
-});
-
-let mongooseModel = db.model('mongoose', mongooseSchema);
 
 let analyse = function () {
 };
 
 analyse.prototype.doAnalyse = function ($) {
     let root = $("body");
-    Config.ticker = 0;
 
     findImg(root);
+
+    console.log(LocalData.selectorData);
 };
 
 function findImg(rt) {
@@ -42,44 +32,29 @@ function findImg(rt) {
         childList = root.children || {};
     }
     for (let i = 0; i < childList.length; i++) {
-        (function (i) {
-            if (childList[i].name == "img") {
-                let imgUrl = "";
-                for (let j = 0; j < attrType.length; j++) {
-                    if (childList[i].attribs[attrType[j]]) {
-                        imgUrl = childList[i].attribs[attrType[j]];
-                        break;
-                    }
+        if (childList[i].name == "img") {
+            let imgUrl = "";
+            for (let j = 0; j < attrType.length; j++) {
+                if (childList[i].attribs[attrType[j]]) {
+                    imgUrl = childList[i].attribs[attrType[j]];
+                    break;
                 }
-                let selectorStr = "";
-                let allSelector = myUtil.getLocation(selectorStr, childList[i]);
+            }
+            let selectorStr = "";
+            let wholeSelector = myUtil.getLocation(selectorStr, childList[i]);
+            wholeSelector = wholeSelector.substring(0, wholeSelector.length-1);
 
-                // Config.ticker += 1;
-                // mydb.findAndUpdate({
-                //     "name": allSelector
-                // }).then(function(data) {
-                //     console.log(data);
-                //     Config.ticker -= 1;
-                //     if (Config.ticker == 0) {
-                //         // mydb.close();
-                //     }
-                // });
-                // console.log(Config.tmpNum++);
-                // mydb.find({
-                //     "name": allSelector
-                // });
-                mongooseModel.find({"name": allSelector}, function (docs) {
-                    if (docs && docs.length > 0 && docs[0].name) {
-                        console.log("update");
-                    } else {
-                        console.log("insert");
-                    }
-                });
-            }
-            else {
-                findImg(childList[i]);
-            }
-        })(i);
+            cacheOpt.find(wholeSelector, function(isExisted, position) {
+                if(isExisted) {
+                    cacheOpt.update(position);
+                } else {
+                    cacheOpt.insert(wholeSelector);
+                }
+            });
+        }
+        else {
+            findImg(childList[i]);
+        }
     }
 }
 
