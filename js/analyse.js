@@ -3,7 +3,7 @@
  */
 'use strict';
 
-const myUtil = require('./myUtil');
+const util = require('./util');
 const service = require('./service');
 const cacheOpt = require('./cacheopt');
 const LocalData = require('./localData');
@@ -41,7 +41,7 @@ function findImg(rt, url) {
                 }
             }
             let selectorStr = "";
-            let wholeSelector = myUtil.getLocation(selectorStr, childList[i]);
+            let wholeSelector = util.getLocation(selectorStr, childList[i]);
             wholeSelector = wholeSelector.substring(0, wholeSelector.length-1);
 
             cacheOpt.find(wholeSelector, function(isExisted, position) {
