@@ -3,39 +3,50 @@
  */
 'use strict';
 let mongoose = require('mongoose');
+const Config = require('../Config/Config');
 
 let base = function () {
 };
 
-let db = null;
+let db = null,
+    model = null;
 
-base.prototype.open = function (source, schema, collection) {
-    mongoose.connect(source);
+base.prototype.initConnection = function() {
+    // Schema 结构
+    let checkerSchema = new mongoose.Schema({
+        name: {type: String},
+        url: {type: String},
+        count: {type: Number}
+    });
+
+    mongoose.connect("mongodb://localhost/checker");
     db = mongoose.connection;
-    return db.model(collection, schema);
+    model = db.model("selector", checkerSchema);
 };
 
-base.prototype.save = function (model, doc) {
+base.prototype.save = function (doc) {
     // 增加记录 基于model操作
-    model.create(doc, function (error) {
-        if (error) {
-            console.log("save error:" + error);
+    return model.create(doc, function(error) {
+        if(error) {
+            console.log("save error: " + error);
         } else {
             console.log("save success");
         }
-        db.close();
     });
 };
 
-base.prototype.deleteByUrl = function (model, url) {
-    model.remove({"url": url}, function (error) {
-        if (error) {
+base.prototype.deleteByUrl = function (url) {
+    return model.remove({"url": url}, function(error) {
+        if(error) {
             console.log("delete error: " + error);
         } else {
             console.log("delete success");
         }
-        db.close();
     });
+};
+
+base.prototype.findByUrl = function (url, callback) {
+    return model.find({"url": url});
 };
 
 // 关闭数据库链接
@@ -43,5 +54,8 @@ base.prototype.close = function () {
     db.close();
 };
 
-module.exports = new base();
+let baseObj = new base();
+baseObj.initConnection();
+
+module.exports = baseObj;
 

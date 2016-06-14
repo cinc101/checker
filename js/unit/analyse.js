@@ -58,4 +58,9 @@ analyse.prototype.doAnalyse = function ($, url) {
     }
 };
 
+analyse.prototype.contrast = function ($, url) {
+    let doc = referService.findSelector(url);
+    console.log(doc);
+};
+
 module.exports = new analyse();

@@ -8,7 +8,7 @@ const analyse = require('./unit/analyse');
 const LocalData = require('./unit/localData');
 const cheerio = require('cheerio');
 
-let url = "http://www.jd.com";
+let url = Config.urls[0];
 
 let checker = {
     init: function(option) {
@@ -27,7 +27,7 @@ let checker = {
                     analyse.doAnalyse(domObj, url);
                 } else {
                     //和参照数据作对比
-
+                    analyse.contrast(domObj, url);
                 }
             } else {
                 console.log(statusCode);
@@ -37,5 +37,5 @@ let checker = {
 };
 
 checker.init({
-    "firstFetch": true
+    "firstFetch": false
 });

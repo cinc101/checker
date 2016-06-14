@@ -4,8 +4,8 @@
  */
 'use strict';
 const base = require('./base');
-const Config = require('../Config/Config');
-let mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const co = require('co');
 
 let referService = function () {
 };
@@ -15,18 +15,29 @@ let referService = function () {
  * @param url
  * @param doc localData中的json数据
  */
+// referService.prototype.saveSelector = function(url, doc) {
+//     base.deleteByUrl(url).then(function () {
+//         base.save(doc).then(function() {
+//             base.close();
+//         });
+//     });
+// };
+
 referService.prototype.saveSelector = function(url, doc) {
-    // Schema 结构
-    let checkerSchema = new mongoose.Schema({
-        name: {type: String},
-        url: {type: String},
-        count: {type: Number}
+    co(function* (){
+        yield base.deleteByUrl(url);
+        yield base.save(doc);
+        yield base.close();
     });
+};
 
-    let selectorModel = base.open(Config.serviceInterface.checkerSource, checkerSchema, Config.serviceInterface.selectorCollection);
-
-    base.deleteByUrl(selectorModel, url);
-    base.save(selectorModel, doc);
+referService.prototype.findSelector = function(url) {
+    let doc;
+    co(function* () {
+        let doc = yield base.findByUrl(url);
+        yield base.close();
+    });
+    // return doc;
 };
 
 module.exports = new referService();
