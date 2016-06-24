@@ -41,7 +41,6 @@ analyse.prototype.doAnalyse = function ($, url) {
                 }
                 let selectorStr = "";
                 let wholeSelector = util.getLocation(selectorStr, childList[i]);
-                wholeSelector = wholeSelector.substring(0, wholeSelector.length-1);
 
                 cacheOpt.find(wholeSelector, function(isExisted, position) {
                     if(isExisted) {
@@ -59,8 +58,25 @@ analyse.prototype.doAnalyse = function ($, url) {
 };
 
 analyse.prototype.contrast = function ($, url) {
-    let doc = referService.findSelector(url);
-    console.log(doc);
+    referService.findSelector(url, function(doc) {
+        contrastImgNum($, doc);
+    });
 };
+
+function contrastImgNum($, doc) {
+    for(let i=0; i<doc.length; i++) {
+        let selector = doc[i].name;
+        let numInDb = doc[i].count;
+        let numInWeb = $(selector).length;
+        if(numInDb != numInWeb) {
+            console.log("==================================================");
+            console.log("number in database: " + numInDb);
+            console.log("number in web: " + numInWeb);
+            console.log("selector: " + selector);
+            console.log("url:" + doc[i].url);
+            console.log("==================================================");
+        }
+    }
+}
 
 module.exports = new analyse();

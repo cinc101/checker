@@ -46,7 +46,9 @@ base.prototype.deleteByUrl = function (url) {
 };
 
 base.prototype.findByUrl = function (url, callback) {
-    return model.find({"url": url});
+    return model.find({"url": url}, function(error, data) {
+        callback(data);
+    });
 };
 
 // 关闭数据库链接

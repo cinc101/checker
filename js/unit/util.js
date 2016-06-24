@@ -53,7 +53,8 @@ function getKey($obj) {
 function changeOrder(str) {
     let strArray = str.split(" ");
     strArray = strArray.reverse();
-    return strArray.join(" ");
+    let tmp = strArray.join(" ");
+    return tmp.substring(tmp, tmp.length-1);
 }
 
 module.exports = new util();

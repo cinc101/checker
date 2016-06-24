@@ -31,13 +31,14 @@ referService.prototype.saveSelector = function(url, doc) {
     });
 };
 
-referService.prototype.findSelector = function(url) {
+referService.prototype.findSelector = function(url, callback) {
     let doc;
     co(function* () {
-        let doc = yield base.findByUrl(url);
+        yield base.findByUrl(url, function(data) {
+            callback(data);
+        });
         yield base.close();
     });
-    // return doc;
 };
 
 module.exports = new referService();
