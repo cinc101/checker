@@ -67,7 +67,13 @@ function contrastImgNum($, doc) {
     for(let i=0; i<doc.length; i++) {
         let selector = doc[i].name;
         let numInDb = doc[i].count;
-        let numInWeb = $(selector).length;
+        let numInWeb;
+        try {
+            numInWeb = $(selector).length;
+        } catch (e) {
+            debugger;
+        }
+
         if(numInDb != numInWeb) {
             console.log("==================================================");
             console.log("number in database: " + numInDb);

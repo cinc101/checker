@@ -21,7 +21,7 @@ base.prototype.initConnection = function() {
 
     mongoose.connect("mongodb://localhost/checker");
     db = mongoose.connection;
-    model = db.model("selector", checkerSchema);
+    model = db.model(Config.serviceInterface.selectorCollection, checkerSchema);
 };
 
 base.prototype.save = function (doc) {
@@ -57,7 +57,7 @@ base.prototype.close = function () {
 };
 
 let baseObj = new base();
-baseObj.initConnection();
+// baseObj.initConnection();
 
 module.exports = baseObj;
 

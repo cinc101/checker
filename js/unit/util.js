@@ -6,8 +6,8 @@
 let util = function () {
 };
 
-const http = require('http');
 const request = require('request');
+const Config = require('../Config/Config');
 
 util.prototype.get = function (url, callback) {
     request(url, function (error, response, body) {
@@ -25,11 +25,11 @@ util.prototype.getLocation = function (selectorStr, $obj) {
 
 function getAllSelector(selectorStr, $obj) {
     if($obj.name == "body") {
-        selectorStr += " " + "body";
+        selectorStr += ">" + "body";
         return changeOrder(selectorStr);
     } else {
         let key = getKey($obj);
-        selectorStr += " " + key;
+        selectorStr += ">" + key;
         return getAllSelector(selectorStr, $obj.parent);
     }
 }
@@ -39,22 +39,50 @@ function getKey($obj) {
 
     if($obj.attribs["id"]) {
         selector = "#" + $obj.attribs["id"];
-    } else if($obj.attribs["class"]) {
-        let className = $obj.attribs["class"];
-        let classArray = className.split(" ");
-        selector = "." + classArray[0];
     } else {
-        selector = $obj.name;
+        if($obj.attribs["class"]) {
+            let className = $obj.attribs["class"];
+            let classArray = className.split(" ");
+
+            for(let i=0; i<classArray.length; i++) {
+                let isExisted = false;
+                for(let j=0; j<Config.class_white_list.length; j++) {
+                    if(classArray[i].indexOf(Config.class_white_list[j]) > -1) {
+                        isExisted = true;
+                        break;
+                    }
+                }
+                if(!isExisted) {
+                    selector = "." + replaceChar(classArray[i]);
+                }
+            }
+
+            if(selector == "." || selector == "") {
+                selector = $obj.name;
+            }
+        } else {
+            selector = $obj.name;
+        }
     }
 
     return selector;
 }
 
 function changeOrder(str) {
-    let strArray = str.split(" ");
+    let strArray = str.split(">");
     strArray = strArray.reverse();
-    let tmp = strArray.join(" ");
+    let tmp = strArray.join(">");
     return tmp.substring(tmp, tmp.length-1);
+}
+
+/**
+ * 将/t,/n等特殊符号替换为""
+ * @param str
+ * @returns {void|string|XML|*}
+ */
+function replaceChar(str) {
+    str = str.replace(/[\s]/g, "");
+    return str;
 }
 
 module.exports = new util();

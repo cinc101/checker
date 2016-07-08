@@ -20,10 +20,8 @@ ptm.prototype.getDom = function(url) {
             sitepage = page;
             return page.open(url);
         })
-        .then(status => {
-            console.log(status);
+        .then(() => {
             let html = sitepage.evaluate(function() {
-                window.scrollTo(0,10000);//滚动到底部
                 return document.getElementsByTagName("html")[0].outerHTML;
             });
             phInstance.exit();

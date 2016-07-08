@@ -15,7 +15,6 @@ cacheOpt.prototype.insert = function(keyword, url) {
     };
     try {
         LocalData.selectorData.push(newObj);
-        console.log("insert");
     } catch(error) {
         console.log(error);
     }
@@ -25,7 +24,6 @@ cacheOpt.prototype.update = function(position) {
     try {
         let thisObj = LocalData.selectorData[position];
         thisObj.count += 1;
-        console.log("update");
     } catch(error) {
         console.log(error);
     }

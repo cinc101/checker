@@ -3,7 +3,8 @@
  */
 'use strict';
 let Config = {
-    "firstFetch": true
+    "firstFetch": false, //true，采集数据， false: 对比
+    "ticker": null //计数器，用来控制何时关闭数据库连接
 };
 
 Config.serviceInterface = {
@@ -13,6 +14,10 @@ Config.serviceInterface = {
 
 Config.urls = [
     "http://www.jd.hk"
+];
+
+Config.class_white_list = [
+    "active","curr","hover","fore","style","lazy","hide"
 ];
 
 module.exports = Config;

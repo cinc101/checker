@@ -4,6 +4,7 @@
  */
 'use strict';
 const base = require('./base');
+const Config = require('../Config/Config');
 const mongoose = require('mongoose');
 const co = require('co');
 
@@ -27,17 +28,16 @@ referService.prototype.saveSelector = function(url, doc) {
     co(function* (){
         yield base.deleteByUrl(url);
         yield base.save(doc);
-        yield base.close();
+        yield Config.ticker -= 1;
     });
 };
 
 referService.prototype.findSelector = function(url, callback) {
-    let doc;
     co(function* () {
         yield base.findByUrl(url, function(data) {
+            Config.ticker -= 1;
             callback(data);
         });
-        yield base.close();
     });
 };
 
