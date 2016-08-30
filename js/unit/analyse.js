@@ -74,12 +74,15 @@ function contrastImgNum($, doc) {
             debugger;
         }
 
-        if(numInDb != numInWeb) {
+        if(numInDb > numInWeb) {
+            var myDate = new Date();
+
             console.log("==================================================");
             console.log("number in database: " + numInDb);
             console.log("number in web: " + numInWeb);
             console.log("selector: " + selector);
             console.log("url:" + doc[i].url);
+            console.log("date:" + myDate.toLocaleString());
             console.log("==================================================");
         }
     }

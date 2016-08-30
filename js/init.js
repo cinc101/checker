@@ -9,12 +9,15 @@ const LocalData = require('./unit/localData');
 const ptmFn = require('./phantomjs/ptmFn');
 const base = require('./service/base');
 const cheerio = require('cheerio');
+const schedule = require('node-schedule');
+
+
+//连接数据库
+base.initConnection();
 
 let checker = {
     init: function(option) {
         let self = this;
-        //连接数据库
-        base.initConnection();
 
         //初始化本地临时数据
         LocalData.selectorData = [];
@@ -55,16 +58,22 @@ let checker = {
             });
         });
 
-        let tk = setInterval(() => {
+        /*let tk = setInterval(() => {
             if(Config.ticker == 0) {
                 base.close();
                 console.log("database closed");
                 clearInterval(tk);
             }
-        }, 2000);
+        }, 2000);*/
     }
 };
 
-checker.init({
-    "firstFetch": Config.firstFetch
+let rule = new schedule.RecurrenceRule();
+rule.minute = 1;
+rule.second = 0;
+
+let j = schedule.scheduleJob(rule, function(){
+    checker.init({
+        "firstFetch": Config.firstFetch
+    });
 });
